@@ -1,0 +1,36 @@
+	
+const int EMG_PIN = A0;
+
+const int ACTIVATION_THRESHOLD = 300;
+const int RELEASE_THRESHOLD = 240;
+
+bool emgActive = false;
+
+void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  int emgValue = analogRead(EMG_PIN);
+
+  // Hysteresis
+  if (!emgActive && emgValue >= ACTIVATION_THRESHOLD) {
+    emgActive = true;
+  }
+
+  if (emgActive && emgValue <= RELEASE_THRESHOLD) {
+    emgActive = false;
+  }
+
+  // Numeric values for Arduino Serial Plotter
+  Serial.print("EMG:");
+  Serial.print(emgValue);
+
+  Serial.print("\tActivation:");
+  Serial.print(ACTIVATION_THRESHOLD);
+
+  Serial.print("\tRelease:");
+  Serial.println(RELEASE_THRESHOLD);
+
+  delay(50);
+}
